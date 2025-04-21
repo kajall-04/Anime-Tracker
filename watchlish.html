@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{ modalOpen: false, selectedAnime: null, search: '', filteredWatchlist: [], watchlist: [
+  { title: 'Naruto', status: 'Watching', progress: 250, total: 500, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Naruto_Logo.svg/800px-Naruto_Logo.svg.png' },
+  { title: 'One Piece', status: 'Completed', progress: 1050, total: 1050, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/One_Piece_Logo.svg/800px-One_Piece_Logo.svg.png' },
+  { title: 'Attack on Titan', status: 'Watching', progress: 45, total: 75, image: 'https://upload.wikimedia.org/wikipedia/commons/5/51/Attack_on_Titan_logo.svg' }
+] }" x-init="filteredWatchlist = watchlist">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexode Dashboard - Watchlist</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lottie-web/build/player/lottie.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+
+  <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <!-- Watchlist Page -->
+    <div class="bg-gradient-to-br from-green-900 via-teal-800 to-cyan-800 p-6 rounded-2xl shadow-2xl col-span-1 md:col-span-3 text-white animate__animated animate__fadeInUp">
+      <h2 class="text-4xl font-extrabold mb-4 animate__animated animate__pulse">📺 My Watchlist</h2>
+      <p class="mb-6 text-lg text-gray-300 italic">Track your anime progress and manage your favorites!</p>
+
+      <!-- Search and Add Button -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <input type="text" x-model="search" @input="filteredWatchlist = watchlist.filter(a => a.title.toLowerCase().includes(search.toLowerCase()))" placeholder="🔍 Search Watchlist..." class="bg-gray-800 text-white px-4 py-2 rounded w-full md:w-1/2">
+        <button class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full text-white font-semibold transition">➕ Add Anime</button>
+      </div>
+
+      <!-- Sort and Filter Options -->
+      <div class="mb-6 flex gap-4 justify-start items-center">
+        <select x-model="statusFilter" @change="filteredWatchlist = watchlist.filter(a => statusFilter === 'All' || a.status === statusFilter)" class="bg-gray-800 text-white px-4 py-2 rounded">
+          <option value="All">All Status</option>
+          <option value="Watching">Watching</option>
+          <option value="Completed">Completed</option>
+          <option value="On Hold">On Hold</option>
+        </select>
+        <button @click="filteredWatchlist = watchlist" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-full">Reset Filter</button>
+      </div>
+
+      <!-- Watchlist Items -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <template x-for="anime in filteredWatchlist" :key="anime.title">
+          <div @click="modalOpen = true; selectedAnime = anime" class="bg-gray-800 p-6 rounded-xl shadow-lg hover:scale-105 transition transform duration-300 animate__animated animate__zoomIn cursor-pointer">
+            <img :src="anime.image" alt="Anime Poster" class="rounded-xl mb-4 h-48 w-full object-cover">
+            <h3 class="text-2xl font-bold mb-2" x-text="anime.title"></h3>
+            <p class="text-sm text-gray-300 mb-2" x-text="'Status: ' + anime.status"></p>
+            <div class="flex justify-between items-center">
+              <p class="text-xs text-gray-400" x-text="'Progress: ' + anime.progress + '/' + anime.total"></p>
+              <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 text-xs rounded">Details</button>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- Animation -->
+      <div class="mt-10 animate__animated animate__fadeInUp animate__delay-3s">
+        <div id="watchlistLottie" class="w-full h-72 rounded-xl overflow-hidden shadow-lg"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Scripts -->
+  <script>
+    lottie.loadAnimation({
+      container: document.getElementById('watchlistLottie'),
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: 'https://assets4.lottiefiles.com/packages/lf20_9zqGKH.json'
+    });
+  </script>
+</body>
+</html>

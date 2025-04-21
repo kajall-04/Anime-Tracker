@@ -1,0 +1,97 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #2d2d2d;
+    font-family: 'Orbitron', sans-serif;
+    color: #ffffff;
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1c1c1c;
+    padding: 20px 50px;
+  }
+  
+  .logo {
+    color: #00aaff;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  nav a {
+    color: #e0e0e0;
+    margin-left: 20px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  nav a:hover {
+    color: #00aaff;
+  }
+  
+  .welcome {
+    text-align: center;
+    padding: 80px 20px 40px;
+  }
+  
+  .welcome h1 {
+    color: #00aaff;
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+  
+  .welcome p {
+    font-size: 18px;
+    color: #ccc;
+    margin-bottom: 30px;
+  }
+  
+  button {
+    background-color: #00aaff;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 6px;
+  }
+  
+  .section {
+    padding: 40px 50px;
+  }
+  
+  .section h2 {
+    color: #00aaff;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .card {
+    background-color: #3a3a3a;
+    padding: 20px;
+    border-radius: 10px;
+    flex: 1 1 200px;
+    max-width: 250px;
+    min-height: 100px;
+  }
+  
+  .card h3 {
+    color: #00aaff;
+    font-size: 18px;
+    margin: 0 0 10px;
+  }
+  
+  .card p {
+    color: #ccc;
+    font-size: 14px;
+    margin: 0;
+  }
+  
