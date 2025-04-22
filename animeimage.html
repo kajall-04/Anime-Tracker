@@ -20,7 +20,7 @@
       padding: 1rem;
       text-align: center;
       font-size: 2rem;
-      color: #09e570;
+      color: #09e561;
     }
     .container {
       padding: 1rem 2rem;
@@ -69,6 +69,7 @@
       border-radius: 0.8rem;
       overflow: hidden;
       backdrop-filter: blur(4px);
+      position: relative;
     }
     .card img {
       width: 100%;
@@ -88,7 +89,18 @@
     }
     .card-content .progress {
       margin: 0.5rem 0;
-      color: #0b682a;
+      color: #e50914;
+    }
+    .delete-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: rgba(229, 9, 20, 0.8);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.3rem 0.6rem;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -133,6 +145,7 @@
           if (!anime) return alert('Anime not found!');
 
           animeList.push({
+            id: Date.now(),
             title: anime.title,
             image: anime.images.jpg.image_url,
             totalEpisodes: anime.episodes || '?',
@@ -144,6 +157,12 @@
         });
     }
 
+    function deleteAnime(id) {
+      animeList = animeList.filter(anime => anime.id !== id);
+      localStorage.setItem('animeList', JSON.stringify(animeList));
+      renderList();
+    }
+
     function renderList() {
       const list = document.getElementById('animeList');
       list.innerHTML = '';
@@ -153,6 +172,7 @@
         div.classList.add('card');
         div.innerHTML = `
           <img src="${anime.image}" alt="${anime.title}" />
+          <button class="delete-btn" onclick="deleteAnime(${anime.id})">Delete</button>
           <div class="card-content">
             <h4>${anime.title}</h4>
             <p>Status: ${anime.status}</p>
