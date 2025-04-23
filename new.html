@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Discover New Worlds</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    body {
+      background: url('ai-generated-7954598_1280.png') no-repeat center center/cover;
+      height: 100vh;
+      color: white;
+    }
+    .container {
+      background: linear-gradient(180deg, rgba(89, 0, 139, 0.8), rgba(0, 0, 0, 0.7));
+      max-width: 90%;
+      margin: 40px auto;
+      border-radius: 20px;
+      padding: 40px;
+      backdrop-filter: blur(10px);
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      font-size: 2rem;
+      font-weight: 800;
+      gap: 10px;
+    }
+    .header span {
+      font-size: 2.5rem;
+    }
+    .sub-header {
+      font-style: italic;
+      margin-top: 10px;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+      color: #ccc;
+    }
+    .tags {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+    .tag {
+      padding: 8px 16px;
+      border-radius: 20px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .tag.action { background-color: #e91e63; }
+    .tag.fantasy { background-color: #3f51b5; }
+    .tag.slice { background-color: #9c27b0; }
+    .tag.scifi { background-color: #ffc107; color: black; }
+    .tag.mystery { background-color: #ff5722; }
+
+    .cards {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .card {
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      border-radius: 15px;
+      flex: 1;
+      min-width: 250px;
+      max-width: 300px;
+    }
+    .card h2 {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    .card h2 span {
+      margin-right: 10px;
+    }
+    .card ul {
+      list-style: none;
+    }
+    .card ul li {
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+    .new { color: #f06292; }
+    .hot { color: #ff9800; }
+    .hidden { color: #00bfa5; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <span>🔍</span> Discover New Worlds
+    </div>
+    <div class="sub-header">
+      Handpicked adventures, trending tales, and hidden anime treasures — all in one place.
+    </div>
+    <div class="tags">
+      <div class="tag action">Action</div>
+      <div class="tag fantasy">Fantasy</div>
+      <div class="tag slice">Slice of Life</div>
+      <div class="tag scifi">Sci-Fi</div>
+      <div class="tag mystery">Mystery</div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <h2 class="new">📺 New Releases</h2>
+        <ul>
+          <li>Blue Lock</li>
+          <li>Hell's Paradise</li>
+          <li>Heavenly Delusion</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2 class="hot">🔥 Hot Right Now</h2>
+        <ul>
+          <li>Solo Leveling</li>
+          <li>Kaiju No. 8</li>
+          <li>Jujutsu Kaisen S2</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2 class="hidden">🧱 Hidden Gems</h2>
+        <ul>
+          <li>Mushishi</li>
+          <li>Ergo Proxy</li>
+          <li>Made in Abyss</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
