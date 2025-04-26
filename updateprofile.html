@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" x-data="profileData()" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Dashboard</title>
+
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Alpine.js -->
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs" defer></script>
+
+  <!-- Cloud Animation Background -->
+<div class="clouds">
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="cloud cloud3"></div>
+  </div>
+  
+  <!-- Animated Background -->
+  <style>
+    body {
+      background: linear-gradient(-45deg, #0f0f0f, #1a1a2e, #16213e, #0f3460);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
+  
+  
+
+</head>
+
+<body class="text-white font-sans">
+
+  <!-- Dashboard Container -->
+  <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mt-8">
+
+    <!-- Profile Section -->
+    <div class="glass rounded-2xl p-8 shadow-2xl col-span-1 lg:col-span-3">
+
+      <!-- Profile Header -->
+      <div class="flex flex-col md:flex-row items-center gap-6 mb-6">
+        <img :src="user.avatar" alt="Avatar" class="w-32 h-32 rounded-full border-4 border-indigo-400 shadow-md">
+        <div class="flex-1">
+          <h2 class="text-3xl font-extrabold tracking-wide">{{ user.username }}</h2>
+          <p class="text-gray-400">{{ user.email }}</p>
+        </div>
+        <button @click="toggleEdit" class="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-2 px-6 rounded-full transition transform hover:scale-105">Edit Profile</button>
+      </div>
+
+      <!-- Edit Profile Form -->
+      <div x-show="editProfile" x-transition class="glass p-6 rounded-xl shadow-inner mb-6">
+        <h3 class="text-2xl font-bold mb-4">Edit Profile</h3>
+        <form @submit.prevent="saveProfile" class="space-y-4">
+          <div>
+            <label class="text-sm">Username</label>
+            <input type="text" x-model="user.username" class="w-full p-3 rounded bg-gray-900 border-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div>
+            <label class="text-sm">Email</label>
+            <input type="email" x-model="user.email" class="w-full p-3 rounded bg-gray-900 border-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div>
+            <label class="text-sm">Avatar URL</label>
+            <input type="text" x-model="user.avatar" class="w-full p-3 rounded bg-gray-900 border-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-full mt-4 font-bold">
+            Save Changes
+          </button>
+        </form>
+
+        <!-- Loading Spinner -->
+        <div x-show="loading" class="flex justify-center mt-4">
+          <svg class="animate-spin h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+          </svg>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Watchlist Section -->
+    <div class="glass rounded-2xl p-6 shadow-2xl col-span-2">
+      <h3 class="text-2xl font-bold mb-6">🎬 Your Watchlist</h3>
+      <div class="grid md:grid-cols-2 gap-6">
+        <template x-for="anime in user.watchlist" :key="anime.title">
+          <div class="glass p-4 rounded-xl shadow-md hover:scale-105 transform transition cursor-pointer">
+            <img :src="anime.image" class="w-full h-40 object-cover rounded-xl mb-4">
+            <h4 class="text-xl font-bold" x-text="anime.title"></h4>
+            <p class="text-gray-400 text-sm mt-1" x-text="'Status: ' + anime.status"></p>
+            <p class="text-gray-500 text-xs mt-1" x-text="'Progress: ' + anime.progress + '/' + anime.total"></p>
+            <div class="flex gap-2 mt-4">
+              <button @click="markCompleted(anime.title)" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full text-xs font-semibold">Mark Completed</button>
+              <button @click="removeAnime(anime.title)" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full text-xs font-semibold">Remove</button>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <!-- Clubs Section -->
+    <div class="glass rounded-2xl p-6 shadow-2xl">
+      <h3 class="text-2xl font-bold mb-6">🏆 Clubs</h3>
+      <ul class="space-y-4">
+        <template x-for="club in user.clubs" :key="club">
+          <li class="glass p-3 rounded-xl hover:scale-105 transition">{{ club }}</li>
+        </template>
+      </ul>
+    </div>
+
+    <!-- Achievements Section -->
+    <div class="glass rounded-2xl p-6 shadow-2xl">
+      <h3 class="text-2xl font-bold mb-6">🎖️ Achievements</h3>
+      <ul class="space-y-4">
+        <template x-for="achievement in user.achievements" :key="achievement">
+          <li class="glass p-3 rounded-xl hover:scale-105 transition">{{ achievement }}</li>
+        </template>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Alpine.js Profile Data -->
+  <script>
+    function profileData() {
+      return {
+        user: {
+          username: 'JohnDoe',
+          email: 'john@example.com',
+          avatar: 'https://via.placeholder.com/150',
+          watchlist: [
+            { title: 'Naruto', status: 'Watching', progress: 250, total: 500, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Naruto_Logo.svg/800px-Naruto_Logo.svg.png' },
+            { title: 'One Piece', status: 'Completed', progress: 1050, total: 1050, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/One_Piece_Logo.svg/800px-One_Piece_Logo.svg.png' },
+            { title: 'Attack on Titan', status: 'Watching', progress: 45, total: 75, image: 'https://upload.wikimedia.org/wikipedia/commons/5/51/Attack_on_Titan_logo.svg' }
+          ],
+          clubs: ['🔥 Shonen Lovers', '💘 Romantic Hearts'],
+          achievements: ['Completed 100 episodes', 'Watched 3 different genres', 'Joined 5 clubs'],
+        },
+        editProfile: false,
+        loading: false,
+
+        toggleEdit() {
+          this.editProfile = !this.editProfile;
+        },
+        saveProfile() {
+          this.loading = true;
+          setTimeout(() => {
+            this.editProfile = false;
+            this.loading = false;
+          }, 1500);
+        },
+        removeAnime(title) {
+          this.user.watchlist = this.user.watchlist.filter(a => a.title !== title);
+        },
+        markCompleted(title) {
+          const anime = this.user.watchlist.find(a => a.title === title);
+          if (anime) anime.status = 'Completed';
+        }
+      }
+    }
+  </script>
+ 
+  
+
+</body>
+</html>
