@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ultimate Anime Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('https://wallpaperaccess.com/full/496057.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: white;
+    }
+    .glass {
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+    }
+    header {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    .anime-card {
+      padding: 1rem;
+      margin: 0.5rem 0;
+      border-left: 4px solid #38bdf8;
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.875rem;
+      background-color: rgba(0, 0, 0, 0.7);
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 class="text-4xl font-extrabold">🎬 Ultimate Anime Dashboard</h1>
+    <p class="text-gray-300">Your central hub for anime trends, watchlists & more</p>
+  </header>
+
+  <main class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- MAL Trending Anime -->
+    <section class="glass rounded-xl p-4 shadow-lg">
+      <h2 class="section-title">🔥 MAL Trending</h2>
+      <div id="mal-trending">
+        <p>Loading top anime from MyAnimeList...</p>
+      </div>
+    </section>
+
+    <!-- Netflix Popular Anime -->
+    <section class="glass rounded-xl p-4 shadow-lg">
+      <h2 class="section-title">🎥 Netflix Popular</h2>
+      <div class="space-y-2">
+        <div class="anime-card">My Hero Academia: You're Next</div>
+        <div class="anime-card">Mobile Suit Gundam Hathaway</div>
+        <div class="anime-card">Godzilla Minus One</div>
+        <div class="anime-card">One Piece Live Action</div>
+      </div>
+    </section>
+
+    <!-- User Watchlist -->
+    <section class="glass rounded-xl p-4 shadow-lg">
+      <h2 class="section-title">📺 Your Watchlist</h2>
+      <div class="space-y-2">
+        <div class="anime-card">Attack on Titan S4</div>
+        <div class="anime-card">Jujutsu Kaisen</div>
+        <div class="anime-card">Vinland Saga</div>
+      </div>
+    </section>
+
+    <!-- Suggestions -->
+    <section class="glass rounded-xl p-4 shadow-lg md:col-span-2">
+      <h2 class="section-title">✨ Suggestions for You</h2>
+      <p class="text-sm text-gray-300 mb-4">Based on your watch history:</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div class="anime-card">Chainsaw Man</div>
+        <div class="anime-card">Demon Slayer: Mugen Train</div>
+        <div class="anime-card">Mob Psycho 100</div>
+        <div class="anime-card">Tokyo Revengers</div>
+        <div class="anime-card">Erased</div>
+        <div class="anime-card">Black Clover</div>
+      </div>
+    </section>
+
+    <!-- Random Episode Picker -->
+    <section class="glass rounded-xl p-4 shadow-lg">
+      <h2 class="section-title">🕹 Random Episode Picker</h2>
+      <p class="mb-2 text-gray-300">Feeling indecisive? Click the button!</p>
+      <button onclick="pickRandomEpisode()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+        Suggest Me One
+      </button>
+      <p id="random-output" class="mt-4 text-yellow-300 font-semibold"></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 AnimeVerse. Powered by Jikan API & Netflix Trends</p>
+  </footer>
+
+  <script>
+    // Random episode picker
+    const episodeSuggestions = [
+      'Naruto Ep 42',
+      'Bleach Ep 16',
+      'One Piece Ep 1050',
+      'Mob Psycho 100 Ep 5',
+      'Vinland Saga Ep 18',
+      'Spy x Family Ep 10'
+    ];
+
+    function pickRandomEpisode() {
+      const randomEp = episodeSuggestions[Math.floor(Math.random() * episodeSuggestions.length)];
+      document.getElementById('random-output').innerText = 'Watch: ' + randomEp;
+    }
+
+    // Fetch data from Jikan API
+    fetch('https://api.jikan.moe/v4/top/anime')
+      .then(response => response.json())
+      .then(data => {
+        const container = document.getElementById('mal-trending');
+        container.innerHTML = '';
+        data.data.slice(0, 5).forEach(anime => {
+          const div = document.createElement('div');
+          div.className = 'anime-card';
+          div.textContent = anime.title;
+          container.appendChild(div);
+        });
+      })
+      .catch(error => {
+        const container = document.getElementById('mal-trending');
+        container.innerHTML = '<p class="text-red-500">Failed to load data. Try again later.</p>';
+        console.error('Jikan API Error:', error);
+      });
+  </script>
+</body>
+</html>

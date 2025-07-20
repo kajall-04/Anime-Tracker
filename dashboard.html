@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexode Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lottie-web/build/player/lottie.min.js"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+  <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <!-- User Overview Panel -->
+    <div class="bg-gray-800 rounded-2xl p-4 shadow-lg col-span-1 transition-transform transform hover:scale-105 duration-300">
+      <h2 class="text-xl font-bold mb-4">👤 User Overview</h2>
+      <div class="flex items-center space-x-4">
+        <img src="/path/to/profile-pic.jpg" alt="Profile" class="w-16 h-16 rounded-full">
+        <div>
+          <p class="font-semibold" id="username">@Username</p>
+          <p class="text-sm text-gray-400" id="bio">Bio: Anime Enthusiast</p>
+        </div>
+      </div>
+      <div class="mt-4">
+        <p>Currently Watching:</p>
+        <div class="mt-2">
+          <p class="text-sm" id="current-episode">Jujutsu Kaisen - Ep 18</p>
+          <div class="w-full bg-gray-700 h-2 rounded">
+            <div class="bg-green-500 h-2 rounded" id="watch-progress" style="width: 75%"></div>
+          </div>
+        </div>
+        <div class="mt-4 flex justify-between text-sm text-gray-300">
+          <span id="watch-time-today">Watch Time Today: 1h 20m</span>
+          <span id="watch-time-week">This Week: 8h 45m</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Watchlist & Calendar -->
+    <div class="bg-gray-800 rounded-2xl p-4 shadow-lg col-span-1 transition-transform transform hover:scale-105 duration-300">
+      <h2 class="text-xl font-bold mb-4">🗕 Watchlist & Calendar</h2>
+      <ul class="space-y-2">
+        <li class="flex justify-between"><span>Demon Slayer Ep 10</span><span>April 25</span></li>
+        <li class="flex justify-between"><span>Vinland Saga Ep 5</span><span>April 27</span></li>
+      </ul>
+      <div class="mt-4">
+        <p>✅ To-Watch List:</p>
+        <ul class="list-disc ml-6 text-sm text-gray-300">
+          <li>Attack on Titan S4</li>
+          <li>One Piece Wano Arc</li>
+        </ul>
+        <p class="mt-2">✔ Completed:</p>
+        <ul class="list-disc ml-6 text-sm text-gray-300">
+          <li>Death Note</li>
+          <li>Tokyo Ghoul</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Explore & Recommendations -->
+    <div class="bg-gray-800 rounded-2xl p-4 shadow-lg col-span-1 transition-transform transform hover:scale-105 duration-300">
+      <h2 class="text-xl font-bold mb-4">🌟 Explore & Recommendations</h2>
+      <p>🎯 Because you watched Demon Slayer:</p>
+      <ul class="list-disc ml-6 text-sm text-gray-300">
+        <li>Jujutsu Kaisen</li>
+        <li>Chainsaw Man</li>
+      </ul>
+      <p class="mt-4">🎞 Trending Now:</p>
+      <ul class="list-disc ml-6 text-sm text-gray-300">
+        <li>Solo Leveling</li>
+        <li>My Hero Academia S6</li>
+      </ul>
+      <p class="mt-4">🕹 Feeling indecisive? <button onclick="pickRandomEpisode()" class="text-blue-400 underline">Random Episode Picker</button></p>
+    </div>
+
+    <!-- Community Zone -->
+    <div class="bg-gray-800 rounded-2xl p-4 shadow-lg col-span-1 md:col-span-2 transition-transform transform hover:scale-105 duration-300">
+      <h2 class="text-xl font-bold mb-4">👥 Community Zone</h2>
+      <p>📣 Clubs: Shonen Lovers, Dark Anime Circle</p>
+      <p class="mt-2">💬 Latest Poll: "Best Fight of the Year?"</p>
+      <p class="mt-2">🏆 Top Reviewers This Week:</p>
+      <ul class="list-decimal ml-6 text-sm text-gray-300">
+        <li>@OtakuMaster</li>
+        <li>@MangaQueen</li>
+        <li>@ZenitsuFan</li>
+      </ul>
+    </div>
+
+    <!-- Bonus Features -->
+    <div class="bg-gray-800 rounded-2xl p-4 shadow-lg col-span-1 transition-transform transform hover:scale-105 duration-300">
+      <h2 class="text-xl font-bold mb-4">✨ Bonus Features</h2>
+      <p>🎨 Dashboard Theme: 
+        <select class="bg-gray-700 text-white p-1 rounded">
+          <option>Dark</option>
+          <option>Light</option>
+          <option>Neon</option>
+        </select>
+      </p>
+      <p class="mt-2">🧬 Mood-based Suggestions</p>
+      <p class="text-sm text-gray-300">Choose Mood: 
+        <button class="bg-blue-600 px-2 py-1 rounded">Chill</button> 
+        <button class="bg-red-600 px-2 py-1 rounded">Intense</button> 
+        <button class="bg-purple-600 px-2 py-1 rounded">Emotional</button>
+      </p>
+      <div id="lottie" class="w-32 h-32 mx-auto mt-4"></div>
+    </div>
+
+    <!-- Chart Panel -->
+    <div class="bg-gray-800 rounded-2xl p-4 shadow-lg col-span-1 md:col-span-3 transition-transform transform hover:scale-105 duration-300">
+      <h2 class="text-xl font-bold mb-4">📊 Watch Time Overview</h2>
+      <canvas id="progressChart" width="400" height="200"></canvas>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    const episodes = ["Naruto Ep 47", "Bleach Ep 12", "Spy x Family Ep 6"];
+    function pickRandomEpisode() {
+      const rand = episodes[Math.floor(Math.random() * episodes.length)];
+      alert("Try watching: " + rand);
+    }
+
+    // Chart.js for watch time
+    const ctx = document.getElementById('progressChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+        datasets: [{
+          label: 'Watch Time (mins)',
+          data: [30, 45, 50, 40, 60, 80, 75],
+          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          fill: true,
+        }]
+      }
+    });
+
+    // Lottie animation
+    lottie.loadAnimation({
+      container: document.getElementById('lottie'),
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: 'https://assets10.lottiefiles.com/packages/lf20_qp1q7mct.json'
+    });
+  </script>
+</body>
+</html>

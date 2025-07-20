@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexode Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lottie-web/build/player/lottie.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <style>
+    body {
+      background: radial-gradient(circle at 20% 20%, #1a1a2e 0%, #16213e 100%);
+      overflow-x: hidden;
+    }
+
+    .stars {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      background: transparent;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 2s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.3); }
+    }
+  </style>
+</head>
+<body class="text-white font-sans">
+  <div class="stars" id="star-container"></div>
+
+  <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <!-- Existing Dashboard Content... -->
+
+    <!-- Discover Page -->
+    <div class="bg-gradient-to-br from-indigo-900 via-purple-800 to-pink-700 p-6 rounded-2xl shadow-2xl col-span-1 md:col-span-3 text-white animate__animated animate__fadeInUp">
+      <h2 class="text-4xl font-extrabold mb-4 animate-pulse hover:text-yellow-300 transition duration-300">🔍 Discover New Worlds</h2>
+      <p class="mb-6 text-lg italic text-gray-200">Handpicked adventures, trending tales, and hidden anime treasures — all in one place.</p>
+
+      <!-- Filters -->
+      <div class="mb-6 flex flex-wrap gap-3">
+        <button class="bg-pink-600 hover:bg-pink-700 px-4 py-2 rounded-full text-sm font-semibold transition">Action</button>
+        <button class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-full text-sm font-semibold transition">Fantasy</button>
+        <button class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-full text-sm font-semibold transition">Slice of Life</button>
+        <button class="bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded-full text-sm font-semibold transition">Sci-Fi</button>
+        <button class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-full text-sm font-semibold transition">Mystery</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- New Releases -->
+        <div class="bg-gray-900 bg-opacity-80 p-6 rounded-xl transform hover:scale-105 transition duration-300 shadow-xl animate__animated animate__zoomIn">
+          <h3 class="font-bold text-2xl mb-3 text-pink-400">🎬 New Releases</h3>
+          <ul class="list-disc ml-6 text-gray-300 space-y-1">
+            <li>Blue Lock</li>
+            <li>Hell's Paradise</li>
+            <li>Heavenly Delusion</li>
+          </ul>
+        </div>
+
+        <!-- Trending Now -->
+        <div class="bg-gray-900 bg-opacity-80 p-6 rounded-xl transform hover:scale-105 transition duration-300 shadow-xl animate__animated animate__zoomIn animate__delay-1s">
+          <h3 class="font-bold text-2xl mb-3 text-yellow-400">🔥 Hot Right Now</h3>
+          <ul class="list-disc ml-6 text-gray-300 space-y-1">
+            <li>Solo Leveling</li>
+            <li>Kaiju No. 8</li>
+            <li>Jujutsu Kaisen S2</li>
+          </ul>
+        </div>
+
+        <!-- Hidden Gems -->
+        <div class="bg-gray-900 bg-opacity-80 p-6 rounded-xl transform hover:scale-105 transition duration-300 shadow-xl animate__animated animate__zoomIn animate__delay-2s">
+          <h3 class="font-bold text-2xl mb-3 text-green-400">🌌 Hidden Gems</h3>
+          <ul class="list-disc ml-6 text-gray-300 space-y-1">
+            <li>Mushishi</li>
+            <li>Ergo Proxy</li>
+            <li>Made in Abyss</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Carousel / Animation -->
+      <div class="mt-10 relative animate__animated animate__fadeInUp animate__delay-3s">
+        <div id="discoverLottie" class="w-full h-72 rounded-xl overflow-hidden shadow-lg"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    const episodes = ["Naruto Ep 47", "Bleach Ep 12", "Spy x Family Ep 6"];
+    function pickRandomEpisode() {
+      const rand = episodes[Math.floor(Math.random() * episodes.length)];
+      alert("Try watching: " + rand);
+    }
+
+    // Chart.js for watch time
+    const ctx = document.getElementById('progressChart')?.getContext('2d');
+    if (ctx) {
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          datasets: [{
+            label: 'Watch Time (mins)',
+            data: [30, 45, 50, 40, 60, 80, 75],
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            fill: true,
+          }]
+        }
+      });
+    }
+
+    // Lottie animation for Discover
+    lottie.loadAnimation({
+      container: document.getElementById('discoverLottie'),
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: 'https://assets10.lottiefiles.com/packages/lf20_lgcutb3d.json'
+    });
+
+    // Generate stars
+    const starContainer = document.getElementById("star-container");
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement("div");
+      star.classList.add("star");
+      star.style.top = Math.random() * 100 + "%";
+      star.style.left = Math.random() * 100 + "%";
+      star.style.animationDuration = (Math.random() * 3 + 2) + "s";
+      starContainer.appendChild(star);
+    }
+  </script>
+</body>
+</html>

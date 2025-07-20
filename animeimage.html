@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Now - Anime Tracker</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      margin: 0;
+      background: url('OIP.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+    }
+    header {
+      background-color: rgba(20, 20, 20, 0.8);
+      padding: 1rem;
+      text-align: center;
+      font-size: 2rem;
+      color: #09e561;
+    }
+    .container {
+      padding: 1rem 2rem;
+      background-color: rgba(0, 0, 0, 0.8);
+      min-height: 100vh;
+    }
+    .form-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    input, select, button {
+      padding: 0.8rem;
+      border: none;
+      border-radius: 0.5rem;
+    }
+    input, select {
+      flex: 1;
+    }
+    button {
+      background-color: #e50914;
+      color: #fff;
+      cursor: pointer;
+    }
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .tabs button {
+      background-color: #333;
+      border-radius: 2rem;
+      padding: 0.6rem 1.2rem;
+    }
+    .tabs .active {
+      background-color: #e50914;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background-color: rgba(28, 28, 28, 0.9);
+      border-radius: 0.8rem;
+      overflow: hidden;
+      backdrop-filter: blur(4px);
+      position: relative;
+    }
+    .card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
+    .card-content {
+      padding: 1rem;
+    }
+    .card-content h4 {
+      margin: 0;
+      color: #fff;
+    }
+    .card-content p {
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+    .card-content .progress {
+      margin: 0.5rem 0;
+      color: #e50914;
+    }
+    .delete-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: rgba(229, 9, 20, 0.8);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.3rem 0.6rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>Track Now - Anime Tracker</header>
+  <div class="container">
+    <div class="form-section">
+      <input type="text" id="animeTitle" placeholder="Enter anime title...">
+      <input type="number" id="watchedEpisodes" placeholder="Watched episodes">
+      <select id="status">
+        <option value="Watching">Watching</option>
+        <option value="Completed">Completed</option>
+        <option value="Planned">Planned</option>
+        <option value="Dropped">Dropped</option>
+      </select>
+      <button onclick="searchAnime()">Add</button>
+    </div>
+    <div class="tabs">
+      <button class="active" onclick="filterStatus('Watching')">Watching</button>
+      <button onclick="filterStatus('Completed')">Completed</button>
+      <button onclick="filterStatus('Planned')">Planned</button>
+      <button onclick="filterStatus('Dropped')">Dropped</button>
+    </div>
+    <div class="card-grid" id="animeList"></div>
+  </div>
+
+  <script>
+    let animeList = JSON.parse(localStorage.getItem('animeList')) || [];
+    let currentFilter = 'Watching';
+
+    function searchAnime() {
+      const title = document.getElementById('animeTitle').value;
+      const watched = document.getElementById('watchedEpisodes').value;
+      const status = document.getElementById('status').value;
+
+      if (!title) return;
+
+      fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(title)}&limit=1`)
+        .then(res => res.json())
+        .then(data => {
+          const anime = data.data[0];
+          if (!anime) return alert('Anime not found!');
+
+          animeList.push({
+            id: Date.now(),
+            title: anime.title,
+            image: anime.images.jpg.image_url,
+            totalEpisodes: anime.episodes || '?',
+            watchedEpisodes: watched,
+            status: status
+          });
+          localStorage.setItem('animeList', JSON.stringify(animeList));
+          renderList();
+        });
+    }
+
+    function deleteAnime(id) {
+      animeList = animeList.filter(anime => anime.id !== id);
+      localStorage.setItem('animeList', JSON.stringify(animeList));
+      renderList();
+    }
+
+    function renderList() {
+      const list = document.getElementById('animeList');
+      list.innerHTML = '';
+
+      animeList.filter(anime => anime.status === currentFilter).forEach(anime => {
+        const div = document.createElement('div');
+        div.classList.add('card');
+        div.innerHTML = `
+          <img src="${anime.image}" alt="${anime.title}" />
+          <button class="delete-btn" onclick="deleteAnime(${anime.id})">Delete</button>
+          <div class="card-content">
+            <h4>${anime.title}</h4>
+            <p>Status: ${anime.status}</p>
+            <p class="progress">Episodes: ${anime.watchedEpisodes}/${anime.totalEpisodes}</p>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    function filterStatus(status) {
+      currentFilter = status;
+      document.querySelectorAll('.tabs button').forEach(btn => btn.classList.remove('active'));
+      [...document.querySelectorAll('.tabs button')].find(btn => btn.textContent === status).classList.add('active');
+      renderList();
+    }
+
+    renderList();
+  </script>
+</body>
+</html>

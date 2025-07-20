@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" x-data="{
+  user: {
+    username: 'JohnDoe',
+    email: 'john@example.com',
+    avatar: 'https://via.placeholder.com/150',
+    watchlist: [
+      { title: 'Naruto', status: 'Watching', progress: 250, total: 500, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Naruto_Logo.svg/800px-Naruto_Logo.svg.png' },
+      { title: 'One Piece', status: 'Completed', progress: 1050, total: 1050, image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/One_Piece_Logo.svg/800px-One_Piece_Logo.svg.png' },
+      { title: 'Attack on Titan', status: 'Watching', progress: 45, total: 75, image: 'https://upload.wikimedia.org/wikipedia/commons/5/51/Attack_on_Titan_logo.svg' }
+    ],
+    clubs: ['🔥 Shonen Lovers', '💘 Romantic Hearts'],
+    achievements: ['Completed 100 episodes', 'Watched 3 different genres', 'Joined 5 clubs'],
+    statistics: { totalWatchTime: 1200, episodesWatched: 350, totalClubs: 3 }
+  },
+  editProfile: false,
+  editProfileDetails() {
+    this.editProfile = !this.editProfile;
+  },
+  removeFromWatchlist(title) {
+    this.user.watchlist = this.user.watchlist.filter(anime => anime.title !== title);
+  },
+  completeAnime(title) {
+    const anime = this.user.watchlist.find(anime => anime.title === title);
+    if (anime) {
+      anime.status = 'Completed';
+    }
+  }
+}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexode Dashboard - Profile</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs" defer></script>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-indigo-800 to-purple-900 text-white font-sans">
+
+  <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Profile Section -->
+    <div class="bg-gradient-to-br from-blue-900 via-purple-800 to-indigo-800 p-6 rounded-2xl shadow-2xl col-span-1 lg:col-span-3 text-white">
+
+      <!-- Profile Header with Edit Option -->
+      <div class="flex items-center space-x-6 mb-6">
+        <img :src="user.avatar" alt="Profile Picture" class="w-32 h-32 rounded-full shadow-lg">
+        <div>
+          <h2 class="text-3xl font-extrabold">{{ user.username }}</h2>
+          <p class="text-lg text-gray-300">{{ user.email }}</p>
+        </div>
+        <button @click="editProfileDetails" class="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-2 px-4 rounded-full ml-auto">Edit</button>
+      </div>
+
+      <!-- Profile Editing Form -->
+      <div x-show="editProfile" class="p-6 bg-gray-800 rounded-xl shadow-lg mb-6">
+        <h3 class="text-xl font-semibold mb-4">Edit Profile</h3>
+        <form @submit.prevent="editProfile = false">
+          <div class="mb-4">
+            <label for="username" class="block text-sm">Username:</label>
+            <input id="username" type="text" class="w-full p-2 bg-gray-700 text-white rounded" :value="user.username" />
+          </div>
+          <div class="mb-4">
+            <label for="email" class="block text-sm">Email:</label>
+            <input id="email" type="email" class="w-full p-2 bg-gray-700 text-white rounded" :value="user.email" />
+          </div>
+          <div class="mb-4">
+            <label for="avatar" class="block text-sm">Profile Picture URL:</label>
+            <input id="avatar" type="text" class="w-full p-2 bg-gray-700 text-white rounded" :value="user.avatar" />
+          </div>
+          <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-full">Save Changes</button>
+        </form>
+      </div>
+
+      <!-- User Information -->
+      <div class="mb-6">
+        <h3 class="text-xl font-semibold mb-4">User Information</h3>
+        <div class="space-y-2">
+          <p class="text-lg">Username: <span class="text-gray-400">{{ user.username }}</span></p>
+          <p class="text-lg">Email: <span class="text-gray-400">{{ user.email }}</span></p>
+        </div>
+      </div>
+
+      <!-- Profile Statistics -->
+      <div class="mb-6">
+        <h3 class="text-xl font-semibold mb-4">Profile Statistics</h3>
+        <div class="space-y-2">
+          <p class="text-lg">Total Watch Time: <span class="text-gray-400">{{ user.statistics.totalWatchTime }} mins</span></p>
+          <p class="text-lg">Episodes Watched: <span class="text-gray-400">{{ user.statistics.episodesWatched }}</span></p>
+          <p class="text-lg">Total Clubs: <span class="text-gray-400">{{ user.statistics.totalClubs }}</span></p>
+        </div>
+      </div>
+
+      <!-- Watchlist Section -->
+      <div class="mb-6">
+        <h3 class="text-xl font-semibold mb-4">Watchlist</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <template x-for="anime in user.watchlist" :key="anime.title">
+            <div class="bg-gray-800 p-6 rounded-xl shadow-lg hover:scale-105 transition transform duration-300">
+              <img :src="anime.image" alt="Anime Poster" class="rounded-xl mb-4 h-48 w-full object-cover">
+              <h3 class="text-2xl font-bold mb-2" x-text="anime.title"></h3>
+              <p class="text-sm text-gray-300 mb-2" x-text="'Status: ' + anime.status"></p>
+              <p class="text-xs text-gray-400" x-text="'Progress: ' + anime.progress + '/' + anime.total"></p>
+              <div class="flex space-x-2 mt-4">
+                <button @click="completeAnime(anime.title)" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-full text-sm">Mark as Completed</button>
+                <button @click="removeFromWatchlist(anime.title)" class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-full text-sm">Remove</button>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- Clubs Section -->
+      <div class="mb-6">
+        <h3 class="text-xl font-semibold mb-4">Joined Clubs</h3>
+        <ul class="space-y-2">
+          <template x-for="club in user.clubs" :key="club">
+            <li class="bg-gray-800 p-4 rounded-xl shadow-lg hover:scale-105 transition transform duration-300">{{ club }}</li>
+          </template>
+        </ul>
+      </div>
+
+      <!-- Achievements Section -->
+      <div class="mb-6">
+        <h3 class="text-xl font-semibold mb-4">Achievements</h3>
+        <ul class="space-y-2">
+          <template x-for="achievement in user.achievements" :key="achievement">
+            <li class="bg-gray-800 p-4 rounded-xl shadow-lg hover:scale-105 transition transform duration-300">{{ achievement }}</li>
+          </template>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
